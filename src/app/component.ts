@@ -2,6 +2,7 @@
 import { ApplicationRef, Component } from "@angular/core";
 import { Model } from "./repository.model";
 import { Product } from "./product.model";
+import { NgForm } from "@angular/forms";
 @Component({
     selector: "app",
     templateUrl: "template.html"
@@ -21,23 +22,43 @@ export class ProductComponent {
     addProduct(p: Product) {
         console.log("New Product: " + this.jsonProduct);
 }
-    getValidationMessages(state: any, thingName?: string) {
+
+formSubmitted: boolean = false;
+    submitForm(form: NgForm) {
+        this.formSubmitted = true;
+        if (form.valid) {
+            this.addProduct(this.newProduct);
+            this.newProduct = new Product();
+            form.reset();
+            this.formSubmitted = false;
+        }
+}    
+
+getFormValidationMessages(form: NgForm): string[] {
+    let messages: string[] = [];
+    Object.keys(form.controls).forEach(k => {
+        this.getValidationMessages(form.controls[k], k)
+            .forEach(m => messages.push(m));
+});
+    return messages;
+}
+
+getValidationMessages(state: any, thingName?: string) {
         let thing: string = state.path || thingName;
         let messages: string[] = [];
         if (state.errors) {
             for (let errorName in state.errors) {
                 switch (errorName) {
                     case "required":
-                        messages.push(`А чо  ${thing} Пушкин вводить будет?`);
+                        messages.push(`А ${thing} кто будет вводить?`);
                         break;
                     case "minlength":
-                        messages.push(` Опять ${thing} ....хотя бы 
+                        messages.push(`напрягись, в ${thing} хотя бы
                             ${state.errors['minlength'].requiredLength}
-                            символов ввести надо`);
+                            буковок`);
                             break;
     case "pattern":
-        messages.push(`в ${thing} ты ввел какую-то дичь
-             `);
+        messages.push(`В ${thing} ты ввел какую-то дичь`);
 break;
                 }
             }
