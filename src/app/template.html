@@ -1,0 +1,10 @@
+<div class="bg-info p-a-1 m-b-1">Model Data: {{jsonProduct}}</div>
+<form novalidate (ngSubmit)="addProduct(newProduct)">
+    <div class="form-group">
+        <label>Name</label>
+        <input class="form-control" name="name" [(ngModel)]="newProduct.name" required minlength="5" pattern="^[A-Za-z ]+$" />
+    </div>
+    <button class="btn btn-primary" type="submit">
+Create
+</button>
+</form>
