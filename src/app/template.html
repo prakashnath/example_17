@@ -1,10 +1,24 @@
+<style>
+    input.ng-dirty.ng-invalid {
+        border: 2px solid #ff0000
+    }
+    
+    input.ng-dirty.ng-valid {
+        border: 2px solid #6bc502
+    }
+</style>
 <div class="bg-info p-a-1 m-b-1">Model Data: {{jsonProduct}}</div>
 <form novalidate (ngSubmit)="addProduct(newProduct)">
     <div class="form-group">
         <label>Name</label>
-        <input class="form-control" name="name" [(ngModel)]="newProduct.name" required minlength="5" pattern="^[A-Za-z ]+$" />
+        <input class="form-control" [(ngModel)]="newProduct.name" name="name" #name="ngModel" required minlength="5" pattern="^[A-Za-z ]+$" />
+        <ul class="text-danger list-unstyled" *ngIf="name.dirty && name.invalid">
+            <li *ngFor="let error of getValidationMessages(name)">
+                {{error}}
+            </li>
+        </ul>
     </div>
     <button class="btn btn-primary" type="submit">
-Create
-</button>
+        Create
+    </button>
 </form>
